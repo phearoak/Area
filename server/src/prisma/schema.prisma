@@ -1,0 +1,148 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MYSQL_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  workflows Workflow[]
+  token     Token[]
+
+  email    String  @unique @db.VarChar(255)
+  password String? @db.VarChar(255)
+  admin    Boolean @default(false)
+  google   Boolean @default(false)
+
+  verified_at DateTime?
+  created_at  DateTime  @default(now()) @db.DateTime(0)
+  updated_at  DateTime  @updatedAt
+
+  @@map("user")
+}
+
+model Service {
+  id        Int        @id @default(autoincrement())
+  actions   Action[]
+  reactions Reaction[]
+  token     Token[]
+
+  name        String  @unique @db.VarChar(255)
+  title       String  @db.VarChar(255)
+  description String  @db.VarChar(255)
+  color       String? @db.VarChar(255)
+  logo_url    String? @db.Text
+
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @updatedAt
+
+  @@map("service")
+}
+
+model Token {
+  id         Int     @id @default(autoincrement())
+  user       User    @relation(fields: [user_id], references: [id])
+  user_id    Int
+  service    Service @relation(fields: [service_id], references: [id])
+  service_id Int
+
+  token         String  @db.Text
+  expires_in    String? @db.Text
+  refresh_token String? @db.Text
+
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @updatedAt
+
+  @@unique(fields: [user_id, service_id], name: "user_service_id")
+  @@map("token")
+}
+
+model Action {
+  id        Int        @id @default(autoincrement())
+  workflows Workflow[]
+  fields    Field[]
+
+  service    Service @relation(fields: [service_id], references: [id])
+  service_id Int
+
+  name        String @unique @db.VarChar(255)
+  description String @db.VarChar(255)
+
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @updatedAt
+
+  @@map("action")
+}
+
+model Reaction {
+  id                 Int                @id @default(autoincrement())
+  workflow_reactions WorkflowReaction[]
+  fields             Field[]
+
+  service    Service @relation(fields: [service_id], references: [id])
+  service_id Int
+
+  name        String @unique @db.VarChar(255)
+  description String @db.VarChar(255)
+
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @updatedAt
+
+  @@map("reaction")
+}
+
+model Workflow {
+  id                 Int                @id @default(autoincrement())
+  workflow_reactions WorkflowReaction[]
+
+  status Boolean @default(false)
+
+  user    User @relation(fields: [user_id], references: [id])
+  user_id Int
+
+  action      Action  @relation(fields: [action_id], references: [id])
+  action_id   Int
+  action_args String? @db.Text
+
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @updatedAt
+
+  @@map("workflow")
+}
+
+model WorkflowReaction {
+  id Int @id @default(autoincrement())
+
+  workflow    Workflow @relation(fields: [workflow_id], references: [id])
+  workflow_id Int
+  reaction    Reaction @relation(fields: [reaction_id], references: [id])
+  reaction_id Int
+
+  args String? @db.Text
+
+  @@map("workflow_reaction")
+}
+
+model Field {
+  id Int @id @default(autoincrement())
+
+  action      Action?   @relation(fields: [action_id], references: [id])
+  action_id   Int?
+  reaction    Reaction? @relation(fields: [reaction_id], references: [id])
+  reaction_id Int?
+
+  name     String
+  label    String?
+  type     String
+  helper   String?
+  required Boolean @default(true)
+
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @updatedAt
+
+  @@map("field")
+}

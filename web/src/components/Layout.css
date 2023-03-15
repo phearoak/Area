@@ -1,0 +1,48 @@
+.layout {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    height: 100%;
+}
+
+.layout > div {
+    align-self: center;
+    padding: 10px 20px;
+    font-size: 30px;
+    font-weight: 550;
+
+}
+
+.layout > div:hover {
+    align-self: center;
+    border-radius: 9999px;
+    cursor: pointer;
+    background-color: rgb(230,230,230);
+}
+
+.link-layout {
+    text-decoration: none;
+    color: black;
+}
+
+#logo {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  display: block;
+  height: 70%;
+}
+
+#logo:hover {
+  cursor: pointer;
+}
+
+.header {
+  position: relative;
+  display: inline-block;
+  height: 100px;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+

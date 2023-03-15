@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "paths": {
+            "@routes": ["routes/index"],
+            "@controllers": ["controllers/index"],
+            "@services": ["services/index"],
+            "@providers": ["providers/index"],
+            "@validations": ["validations/index"],
+            "@interfaces": ["interfaces/index"],
+            "@exceptions": ["exceptions/index"],
+            "@connectors": ["connectors/index"],
+            "@types": ["types"],
+            "@controllers/*": ["controllers/*"],
+            "@middlewares/*": ["middlewares/*"],
+            "@providers/*": ["providers/*"],
+            "@routes/*": ["routes/*"],
+            "@services/*": ["services/*"],
+            "@validations/*": ["validations/*"],
+            "@interfaces/*": ["interfaces/*"],
+            "@exceptions/*": ["exceptions/*"],
+            "@connectors/*": ["connectors/*"]
+        }
+  }
+}

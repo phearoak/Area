@@ -1,0 +1,11 @@
+FROM node:18-alpine
+
+WORKDIR /var/react-native
+
+COPY package*.json /var/react-native/
+RUN npm install
+
+COPY . /var/react-native/
+RUN npm install --unsafe-perm --allow-root -g npm@latest expo-cli@latest
+
+CMD ["npm", "run", "start"]

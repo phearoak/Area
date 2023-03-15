@@ -1,0 +1,1384 @@
+{
+	"info": {
+		"_postman_id": "7b63e35a-2e27-49b7-8198-ad5cefdad80a",
+		"name": "AREA-TESTS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26078128"
+	},
+	"item": [
+		{
+			"name": "USER-OPERATIONS",
+			"item": [
+				{
+					"name": "Signin",
+					"item": [
+						{
+							"name": "Default",
+							"item": [
+								{
+									"name": "ADMIN-Signin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"",
+													"const response = pm.response.json();",
+													"",
+													"pm.environment.set(\"Admin_JWT\", response.access_token);",
+													"",
+													"",
+													"pm.test(\"User login was successful\", function () {",
+													"  pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+													"});",
+													"",
+													"pm.test(\"Admin login\", function () {",
+													"  var jsonData = pm.response.json();",
+													"  pm.expect(jsonData.admin).to.eql(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\" : \"{{Admin_Email}}\",\n    \"password\" : \"{{Admin_Password}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{API}}/auth/signin",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bad-Signin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"User login was unauthorized\", function () {",
+													"  pm.response.to.have.status(401);",
+													"});",
+													"",
+													"pm.test(\"unauthorized message login\", function () {",
+													"  var jsonData = pm.response.json();",
+													"  pm.expect(jsonData.message).to.eql(\"Incorrect email or password\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\" : \"random@random.com\",\n    \"password\" : \"randomPassword\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{API}}/auth/signin",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Facebook",
+							"item": [
+								{
+									"name": "Facebook-signin-authorize",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"good code response\", function () {",
+													"  pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"reply not empty\", function () {",
+													"  var jsonData = pm.response;",
+													"  pm.expect(jsonData).to.not.be.empty",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{API}}/auth/signin/facebook/authorize",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin",
+												"facebook",
+												"authorize"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bad-Facebook-Signin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"User login was unauthorized\", function () {",
+													"  pm.response.to.have.status(401);",
+													"});",
+													"",
+													"pm.test(\"unauthorized message login\", function () {",
+													"  var jsonData = pm.response.json();",
+													"  pm.expect(jsonData.message).to.eql(\"Connection facebook failed.\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{API}}/auth/signin/facebook/?code=Random-code",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin",
+												"facebook",
+												""
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "Random-code"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Github",
+							"item": [
+								{
+									"name": "Github-signin-authorized",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"good code response\", function () {",
+													"  pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"reply not empty\", function () {",
+													"  var jsonData = pm.response;",
+													"  pm.expect(jsonData).to.not.be.empty",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{API}}/auth/signin/github/authorize",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin",
+												"github",
+												"authorize"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Github-Bad-Signin",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"",
+													"",
+													"pm.test(\"User login was unauthorized\", function () {",
+													"  pm.response.to.have.status(401);",
+													"});",
+													"",
+													"",
+													"pm.test(\"unauthorized message login\", function () {",
+													"  var jsonData = pm.response.json();",
+													"  pm.expect(jsonData.message).to.eql(\"Connection github failed.\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{API}}/auth/signin/github/?code=randome_value",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin",
+												"github",
+												""
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "randome_value"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Google",
+							"item": [
+								{
+									"name": "Google-Signin-Authorized",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"good code response\", function () {",
+													"  pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"reply not empty\", function () {",
+													"  var jsonData = pm.response;",
+													"  pm.expect(jsonData).to.not.be.empty",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{API}}/auth/signin/google/authorize",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin",
+												"google",
+												"authorize"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Google-Bad-Signin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"User login was unauthorized\", function () {",
+													"  pm.response.to.have.status(401);",
+													"});",
+													"",
+													"",
+													"pm.test(\"unauthorized message login\", function () {",
+													"  var jsonData = pm.response.json();",
+													"  pm.expect(jsonData.message).to.eql(\"Connection youtube failed.\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{API}}/auth/signin/google?code=bad_code",
+											"host": [
+												"{{API}}"
+											],
+											"path": [
+												"auth",
+												"signin",
+												"google"
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "bad_code"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Signup",
+					"item": [
+						{
+							"name": "Signup",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function randomString(minValue, maxValue, dataSet = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') {",
+											"    if (!minValue) {",
+											"        minValue = 20;",
+											"        maxValue = 20;",
+											"    }",
+											"",
+											"    if (!maxValue) {",
+											"        maxValue = minValue;",
+											"    }",
+											"",
+											"    let length = _.random(minValue, maxValue),",
+											"        randomString = \"\";",
+											"",
+											"    for (let i = 0; i < length; i++)",
+											"        randomString += dataSet.charAt(Math.floor(Math.random() * dataSet.length));",
+											"    return randomString + \"@email.com\";",
+											"}",
+											"",
+											"pm.variables.set('email', randomString());",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"User Signup was successful\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"not Admin\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.admin).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"not google\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.google).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"access_token not null\", function() {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.access_token).to.be.a('string').and.not.be.empty",
+											"})",
+											"",
+											"pm.test(\"user id not null and greater than the admin ID\", function() {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.be.greaterThan(1)",
+											"})",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\" : \"{{email}}\",\n    \"password\" : \"testtest\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API}}/auth/signup",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "SERVICE",
+			"item": []
+		},
+		{
+			"name": "ACTIONS",
+			"item": [
+				{
+					"name": "ID",
+					"item": [
+						{
+							"name": "Authenticated-to-complete",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Admin_JWT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{API}}/action/1/fields",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"1",
+										"fields"
+									],
+									"query": [
+										{
+											"key": "jwt",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlkIjoxLCJlbWFpbCI6ImRlbW9AYXJlYS5jb20iLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjc3NzY4ODM2LCJleHAiOjE2Nzc4NTUyMzZ9.bbcqXJbLahmDSVPly9NOCbMZNcZUhge7VE-I72kW7wY",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "unauthorized",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"good code response\", function () {",
+											"  pm.response.to.have.status(401);",
+											"});",
+											"",
+											"pm.test(\"unauthenticated message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"Not authenticated for the action's service.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/action/1/fields",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"1",
+										"fields"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetActionID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"good code response\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"reply not empty\", function () {",
+											"  var jsonData = pm.response;",
+											"  pm.expect(jsonData).to.not.be.empty",
+											"});",
+											"",
+											"//pm.test(\"good service ID\", function () {",
+											"//  var jsonData = pm.response;",
+											"//  pm.expect(jsonData.service_id).to.equal(1);",
+											"//});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"",
+											"const myHost = pm.environment.get('API')",
+											"const adminPass = pm.environment.get('Admin_Password')",
+											"const adminEmail = pm.environment.get('Admin_Email')",
+											"",
+											"",
+											"pm.sendRequest({",
+											"    url: `${myHost}/auth/signin`,",
+											"    method: 'POST',",
+											"    header: {",
+											"        'content-type': 'application/json'",
+											"    },",
+											"    body: {",
+											"        mode: 'raw',",
+											"        raw: JSON.stringify({",
+											"            \"email\" : adminEmail,",
+											"            \"password\" : adminPass",
+											"        })",
+											"    }",
+											"}, (err, res) => pm.collectionVariables.set(\"TOKEN\", res.json().accessToken));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_JWT}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Admin_JWT}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "x-authorization",
+										"value": "{{Admin_JWT}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{API}}/action/1/",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Editions",
+					"item": [
+						{
+							"name": "WrongNewActions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/action/wrongRequest",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"wrongRequest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BadActionsPatch",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/action/wrongRequest",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"wrongRequest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BaddeleteActions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/action/wrongRequest",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"wrongRequest"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetActions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"good code response\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"reply not empty\", function () {",
+									"  var jsonData = pm.response;",
+									"  pm.expect(jsonData).to.not.be.empty",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/action",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"action"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "REACTIONS",
+			"item": [
+				{
+					"name": "ID",
+					"item": [
+						{
+							"name": "WrongID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"good code response\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"BAD_REQUEST message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/reaction/discord/1/",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"reaction",
+										"discord",
+										"1",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Editions",
+					"item": [
+						{
+							"name": "WrongNewReactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/reaction/wrongRequest",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"reaction",
+										"wrongRequest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BadReactionPatch",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/action/wrongRequest",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"wrongRequest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BadDeleteActions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"param ServiceId must be a positive integer.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/action/wrongRequest",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"action",
+										"wrongRequest"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetRactions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"good code response\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"reply not empty\", function () {",
+									"  var jsonData = pm.response;",
+									"  pm.expect(jsonData).to.not.be.empty",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/reaction",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"reaction"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WORKFLOW",
+			"item": [
+				{
+					"name": "CallBack",
+					"item": [
+						{
+							"name": "WrongWorkflowCallback",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"code response is 400\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"good reply message\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"id must be a positive number.\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/workflow/callback/aaa",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"workflow",
+										"callback",
+										"aaa"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetWorkflows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"good code response\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"reply not empty\", function () {",
+									"  var jsonData = pm.response;",
+									"  pm.expect(jsonData).to.not.be.empty",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/workflow",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"workflow"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TOKEN",
+			"item": [
+				{
+					"name": "BadPostToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"code response is 400\", function () {",
+									"  pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"good reply message\", function () {",
+									"  var jsonData = pm.response.json();",
+									"  pm.expect(jsonData.message).to.eql(\"param service_id must be a positive number.\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/token/discord",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"token",
+								"discord"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FIELD",
+			"item": [
+				{
+					"name": "GetField",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"code response is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"reply not empty\", function () {",
+									"  var jsonData = pm.response;",
+									"  pm.expect(jsonData).to.not.be.empty",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/field/1",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"field",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PatchField",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"code response is 400\", function () {",
+									"  pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"good reply message\", function () {",
+									"  var jsonData = pm.response.json();",
+									"  pm.expect(jsonData.message).to.eql(\"param id must be a positive integer.\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/field/aa",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"field",
+								"aa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteField",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"code response is 400\", function () {",
+									"  pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"good reply message\", function () {",
+									"  var jsonData = pm.response.json();",
+									"  pm.expect(jsonData.message).to.eql(\"param id must be a positive integer.\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/field/aa",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"field",
+								"aa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CONNECTOR",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/github/authorize",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"github",
+								"authorize"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "REVOKE",
+			"item": [
+				{
+					"name": "Github",
+					"item": [
+						{
+							"name": "no_Token_Error",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"bad request code\", function () {",
+											"  pm.response.to.have.status(400);",
+											"});",
+											"",
+											"",
+											"pm.test(\"message token not found\", function () {",
+											"  var jsonData = pm.response.json();",
+											"  pm.expect(jsonData.message).to.eql(\"Token not found\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API}}/revoke/github",
+									"host": [
+										"{{API}}"
+									],
+									"path": [
+										"revoke",
+										"github"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ABOUT.JSON",
+			"item": [
+				{
+					"name": "Get About",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"good code response\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"reply not empty\", function () {",
+									"  var jsonData = pm.response;",
+									"  pm.expect(jsonData).to.not.be.empty",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API}}/about.json/",
+							"host": [
+								"{{API}}"
+							],
+							"path": [
+								"about.json",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": ""
+		}
+	]
+}
